@@ -79,9 +79,9 @@ list(
     safe_packageRank(packages = unique_packages[1:5])
   ),
 
-  tar_quarto(
+  tar_render(
     name = paper,
-    path = "r-updates-fails.qmd"
+    path = "r-updates-fails.Rmd"
   )
 
 )

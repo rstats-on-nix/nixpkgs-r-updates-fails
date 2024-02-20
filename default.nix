@@ -1,7 +1,7 @@
 let
  pkgs = import (fetchTarball "https://github.com/b-rodrigues/nixpkgs/archive/06b93631a20bc9c1e73d7b5c706af12ee01922aa.tar.gz") {};
  system_packages = builtins.attrValues {
-  inherit (pkgs) R glibcLocalesUtf8 quarto nix;
+  inherit (pkgs) R glibcLocalesUtf8 nix;
 };
   in
   pkgs.mkShell {
@@ -15,7 +15,8 @@ let
 
     buildInputs = [
       system_packages
-      pkgs.rPackages.quarto
+      pkgs.rPackages.rmarkdown
+      pkgs.rPackages.knitr
       pkgs.rPackages.reactable
       pkgs.rPackages.rvest
       pkgs.rPackages.tarchetypes
