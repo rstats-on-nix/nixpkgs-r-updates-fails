@@ -62,7 +62,7 @@ jobs:
         run: mv r-updates-fails.html output/r-updates-fails.html
 
       - name: Move html files
-        run: mv r-updates-fails_files.html output/r-updates-fails_files
+        run: mv r-updates-fails_files output/r-updates-fails_files
 
       - name: Identify files that the targets pipeline produced
         run: git ls-files -mo --exclude=renv > .targets-files
