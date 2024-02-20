@@ -33,28 +33,6 @@ jobs:
       - name: Build development environment
         run: |
           nix-build
-          
-      - name: Check if previous runs exists
-        id: runs-exist
-        run: git ls-remote --exit-code --heads origin targets-runs
-        continue-on-error: true
-
-      - name: Checkout previous run
-        if: steps.runs-exist.outcome == 'success'
-        uses: actions/checkout@v2
-        with:
-          ref: targets-runs
-          fetch-depth: 1
-          path: .targets-runs
-
-      - name: Restore output files from the previous run
-        if: steps.runs-exist.outcome == 'success'
-        run: |
-          nix-shell default.nix --run "Rscript -e 'for (dest in scan(\".targets-runs/.targets-files\", what = character())) {
-            source <- file.path(\".targets-runs\", dest)
-            if (!file.exists(dirname(dest))) dir.create(dirname(dest), recursive = TRUE)
-            if (file.exists(source)) file.rename(source, dest)
-          }'"
 
       - name: Compile website
         run: |
