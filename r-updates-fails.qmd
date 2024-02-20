@@ -1,0 +1,35 @@
+---
+title: "nixpkgs:r-updates failures and package rankings"
+format: html
+---
+
+
+```{r, include = FALSE}
+
+targets::tar_load(last_jobset_url)
+
+targets::tar_load(results_table)
+
+# if everything fails, stop here
+stopifnot("Table has error’d" = !is.null(results_table))
+
+results_df <- subset(results_table$package.data,
+                     select = c(-date, -total.downloads, -total.packages, -downloads))
+
+
+```
+
+The table below can be found at `r last_jobset_url`, but here it includes the rank of the package
+as computed by the `{packageRank}` package:
+
+```{r, echo = FALSE}
+targets::tar_load(failing_jobs)
+
+merge(failing_jobs, results_df) |>
+  reactable::reactable(columns = list(build = reactable::colDef(html = TRUE)))
+
+```
+
+Source code: https://github.com/b-rodrigues/nixpkgs-r-updates-fails
+
+Rendered last: `r Sys.time()`
