@@ -66,7 +66,7 @@ jobs:
             git add --force $file
           done
           git commit -am "Run pipeline"
-          git push origin targets-runs
+          git push --force origin targets-runs
 
       - name: Prepare failure artifact
         if: failure()
