@@ -24,5 +24,4 @@ let
       pkgs.rPackages.targets
                   ];
 
-    shellHook = '' Rscript -e "targets::tar_make()" '';
   }
