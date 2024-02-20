@@ -76,7 +76,7 @@ list(
 
   tar_target(
     results_table,
-    packageRank(packages = unique_packages[1:5])
+    packageRank::packageRank(packages = unique_packages[1:5])
     #safe_packageRank(packages = unique_packages[1:5])
   ),
 
