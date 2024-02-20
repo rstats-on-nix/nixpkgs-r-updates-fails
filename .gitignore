@@ -1,1 +1,4 @@
 /.quarto/
+_targets/
+*.html
+r-updates-fails_files/

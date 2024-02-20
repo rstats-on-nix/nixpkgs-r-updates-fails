@@ -54,9 +54,15 @@ jobs:
             if (file.exists(source)) file.rename(source, dest)
           }'"
 
-      - name: Compile slides
+      - name: Compile website
         run: |
           nix-shell default.nix --run "Rscript -e 'targets::tar_make()'"
+
+      - name: Move html output
+        run: mv r-updates-fails.html output/r-updates-fails.html
+
+      - name: Move html files
+        run: mv r-updates-fails_files.html output/r-updates-fails_files
 
       - name: Identify files that the targets pipeline produced
         run: git ls-files -mo --exclude=renv > .targets-files

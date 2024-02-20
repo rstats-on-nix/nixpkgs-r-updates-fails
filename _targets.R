@@ -79,11 +79,9 @@ list(
     safe_packageRank(packages = unique_packages[1:5])
   ),
 
-  tar_force(
+  tar_quarto(
     name = paper,
-    command = quarto::quarto_render("r-updates-fails.qmd"),
-    format = "file",
-    force = TRUE
+    path = "r-updates-fails.qmd"
   )
 
 )
