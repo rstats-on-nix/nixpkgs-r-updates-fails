@@ -14,7 +14,7 @@ safe_packageRank <- function(...){
 
 
 list(
-  tar_target(
+  tar_force(
     evaluations_url,
     "https://hydra.nixos.org/jobset/nixpkgs/r-updates#tabs-evaluations",
     force = TRUE
