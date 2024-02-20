@@ -40,7 +40,7 @@ list(
 
   tar_target(
     last_jobset_url,
-    paste0("https://hydra.nixos.org/eval/", last_evaluation, "#tabs-still-fail")
+    paste0("https://hydra.nixos.org/eval/", last_evaluation, "?full=1#tabs-still-fail")
   ),
 
   tar_target(
