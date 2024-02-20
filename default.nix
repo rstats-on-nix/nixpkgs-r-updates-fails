@@ -14,10 +14,11 @@ let
     LC_MEASUREMENT = "en_US.UTF-8";
 
     buildInputs = [
-      system_packages
-      pkgs.rPackages.rmarkdown
+      system_packages      
       pkgs.rPackages.knitr
+      pkgs.rPackages.packageRank
       pkgs.rPackages.reactable
+      pkgs.rPackages.rmarkdown
       pkgs.rPackages.rvest
       pkgs.rPackages.tarchetypes
       pkgs.rPackages.targets
