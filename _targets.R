@@ -16,7 +16,8 @@ safe_packageRank <- function(...){
 list(
   tar_target(
     evaluations_url,
-    "https://hydra.nixos.org/jobset/nixpkgs/r-updates#tabs-evaluations"
+    "https://hydra.nixos.org/jobset/nixpkgs/r-updates#tabs-evaluations",
+    force = TRUE
   ),
 
   tar_target(
@@ -61,7 +62,7 @@ list(
     transform(packages = gsub("^r-", "", `Package/release name`)) |>
     transform(packages = gsub("-.*$", "", packages)) |>
     transform(build = paste0("https://hydra.nixos.org/build/", X.)) |>
-    transform(build = paste0('<a href="', build, '">"', build, '</a>'))
+    transform(build = paste0('<a href="', build, '">', build, '</a>'))
   ),
 
   tar_target(
