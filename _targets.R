@@ -14,15 +14,15 @@ safe_packageRank <- function(...){
 
 
 list(
-  tar_force(
+  tar_target(
     evaluations_url,
-    "https://hydra.nixos.org/jobset/nixpkgs/r-updates#tabs-evaluations",
-    force = TRUE
+    "https://hydra.nixos.org/jobset/nixpkgs/r-updates#tabs-evaluations"
   ),
 
-  tar_target(
+  tar_force(
     evaluations_tables,
-    read_html(evaluations_url)
+    read_html(evaluations_url),
+    force = TRUE
   ),
 
   tar_target(
