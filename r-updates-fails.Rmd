@@ -8,12 +8,13 @@ format: html
 
 targets::tar_load(last_jobset_url)
 
-targets::tar_load(results_table)
+targets::tar_load(results_table_with_rank)
+targets::tar_load(open_prs)
 
 # if everything fails, stop here
-stopifnot("Table has error’d" = !is.null(results_table))
+stopifnot("Table has error’d" = !is.null(results_table_with_rank))
 
-results_df <- subset(results_table$package.data,
+results_df <- subset(results_table_with_rank$package.data,
                      select = c(-date, -total.downloads, -total.packages, -downloads))
 
 
@@ -26,7 +27,9 @@ as computed by the `{packageRank}` package:
 targets::tar_load(failing_jobs)
 
 merge(failing_jobs, results_df) |>
-  reactable::reactable(columns = list(build = reactable::colDef(html = TRUE)))
+  merge(open_prs, all.x = TRUE) |>  
+  reactable::reactable(columns = list(build = reactable::colDef(html = TRUE),
+                                      PR = reactable::colDef(html = TRUE)))
 
 ```
 

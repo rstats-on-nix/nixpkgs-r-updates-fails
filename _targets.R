@@ -77,14 +77,30 @@ list(
   ),
 
   tar_target(
-    results_table,
+    results_table_with_rank,
     safe_packageRank(packages = unique_packages)
   ),
 
   tar_target(
+    open_prs_raw,
+    fromJSON("open_prs.json") |>
+    subset(subset = grepl("r(p|P)ackages", title))
+  ),
+
+  tar_target(
     open_prs,
-    fromJSON("open_prs.json")
-  )
+    transform(
+      open_prs_raw,
+      title = gsub("^r(p|P)ackages\\.", "", title)
+    ) |>
+    transform(
+      packages = gsub(":.*$", "", title),
+      PR = paste0('<a href="', url, '">', url, '</a>')
+    ) |>
+    subset(
+      select = -c(title, url)
+    )
+  ),
 
   tar_render(
     name = paper,
