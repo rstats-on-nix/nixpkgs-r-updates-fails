@@ -16,14 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
     
       - uses: actions/checkout@v3
-
-      - name: List open PRs
-        run: |
-          gh pr list --search=rPackages -R NixOS/nixpkgs --json title,updatedAt,url > open_prs.json
-
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
@@ -38,6 +34,10 @@ jobs:
       - name: Build development environment
         run: |
           nix-build
+
+      - name: List open PRs
+        run: |
+          gh pr list --search=rPackages -R NixOS/nixpkgs --json title,updatedAt,url > open_prs.json
 
       - name: Compile website
         run: |
