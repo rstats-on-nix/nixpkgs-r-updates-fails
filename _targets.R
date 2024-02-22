@@ -95,10 +95,11 @@ list(
     ) |>
     transform(
       packages = gsub(":.*$", "", title),
+      PR_date = updatedAt,
       PR = paste0('<a href="', url, '">', url, '</a>')
     ) |>
     subset(
-      select = -c(title, url)
+      select = -c(title, url, updatedAt)
     )
   ),
 

@@ -28,8 +28,12 @@ targets::tar_load(failing_jobs)
 
 merge(failing_jobs, results_df) |>
   merge(open_prs, all.x = TRUE) |>  
+  subset(select = -`X.`) |> 
   reactable::reactable(columns = list(build = reactable::colDef(html = TRUE),
-                                      PR = reactable::colDef(html = TRUE)))
+                                      PR = reactable::colDef(html = TRUE)),
+                       defaultSorted = "rank",
+                       filterable = TRUE
+   )
 
 ```
 
