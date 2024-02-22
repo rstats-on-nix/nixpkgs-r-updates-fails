@@ -20,6 +20,11 @@ jobs:
     
       - uses: actions/checkout@v3
 
+      - name: List open PRs
+        run: |
+          gh pr list --search=rPackages -R NixOS/nixpkgs --json title,updatedAt,url > open_prs.json
+
+
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
         with:

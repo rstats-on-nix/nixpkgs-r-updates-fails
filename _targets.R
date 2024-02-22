@@ -2,7 +2,8 @@ library(targets)
 library(tarchetypes)
 
 tar_option_set(packages = c(
-                 "rvest"
+                 "rvest",
+                 "jsonlite"
                ))
 
 safe_packageRank <- function(...){
@@ -79,6 +80,11 @@ list(
     results_table,
     safe_packageRank(packages = unique_packages)
   ),
+
+  tar_target(
+    open_prs,
+    fromJSON("open_prs.json")
+  )
 
   tar_render(
     name = paper,
