@@ -13,6 +13,36 @@ safe_packageRank <- function(...){
   )
 }
 
+get_prs <- function(state){
+
+  output_path <- paste0(state, "_prs.json")
+
+  # Run the command
+  system(paste0(
+    "gh pr list --state=", state,
+    " --search=rPackages -R NixOS/nixpkgs --json title,updatedAt,url > ", 
+    output_path
+  ))
+
+  # Return path for targets
+  output_path
+}
+
+clean_prs <- function(prs_raw, state){
+  prs_raw |>
+    transform(
+      title = gsub("^.*r(p|P)ackages\\.", "", title),
+      state = state
+    ) |>
+    transform(
+      packages = gsub(":.*$", "", title),
+      PR_date = updatedAt,
+      PR = paste0('<a href="', url, '">', url, '</a>')
+    ) |>
+    subset(
+      select = -c(title, url, updatedAt)
+    )
+}
 
 list(
   tar_target(
@@ -82,25 +112,45 @@ list(
   ),
 
   tar_target(
+    open_prs_file,
+    get_prs("open"),
+    format = "file"
+  ),
+
+  tar_target(
+    merged_prs_file,
+    get_prs("merged"),
+    format = "file"
+  ),
+
+  tar_target(
     open_prs_raw,
-    fromJSON("open_prs.json") |>
+    fromJSON(open_prs_file) |>
+    subset(subset = grepl("r(p|P)ackages", title))
+  ),
+
+  tar_target(
+    merged_prs_raw,
+    fromJSON(merged_prs_file) |>
     subset(subset = grepl("r(p|P)ackages", title))
   ),
 
   tar_target(
     open_prs,
-    transform(
-      open_prs_raw,
-      title = gsub("^r(p|P)ackages\\.", "", title)
-    ) |>
-    transform(
-      packages = gsub(":.*$", "", title),
-      PR_date = updatedAt,
-      PR = paste0('<a href="', url, '">', url, '</a>')
-    ) |>
-    subset(
-      select = -c(title, url, updatedAt)
-    )
+    clean_prs(open_prs_raw, "open")
+  ),
+
+  tar_target(
+    merged_prs,
+    clean_prs(merged_prs_raw, "merged")
+  ),
+
+  tar_target(
+    prs_df,
+    rbind(open_prs, merged_prs) |>
+    subset(subset = PR_date > latest_eval_date,
+           select = c("packages", "PR", "PR_date", "state")
+           )
   ),
 
   tar_render(

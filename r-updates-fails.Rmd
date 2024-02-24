@@ -9,7 +9,7 @@ format: html
 targets::tar_load(last_jobset_url)
 
 targets::tar_load(results_table_with_rank)
-targets::tar_load(open_prs)
+targets::tar_load(prs_df)
 
 # if everything fails, stop here
 stopifnot("Table has error’d" = !is.null(results_table_with_rank))
@@ -20,20 +20,23 @@ results_df <- subset(results_table_with_rank$package.data,
 
 ```
 
-The table below can be found at `r last_jobset_url`, but here it includes the rank of the package
-as computed by the `{packageRank}` package, as well as a link to the PR to fix the build
-if it has been opened. For now, a package that doesn't build because one of its dependencies
+The table below can be found at `r last_jobset_url`, but here it includes the
+rank of the package as computed by the `{packageRank}` package, as well as a
+link to the PR to fix the build if it has been opened or if it's been merged
+already. For now, a package that doesn't build because one of its dependencies
 is broken is not linked to its dependency's open PR.
 
-The action generating the website runs each day at midnight. Do check the original on Hydra,
-because Bioconductor packages are not listed, nor packages for which somehow {packageRank}
-can't find a ranking.
+The action generating the website runs each day at midnight. Do check the
+original on Hydra, because Bioconductor packages are not listed, nor packages
+for which somehow {packageRank} can't find a ranking. If the pull request
+doesn't follow the naming convention "rPackages.packagename: blab bal" it likely
+won't show up here.
 
 ```{r, echo = FALSE}
 targets::tar_load(failing_jobs)
 
 merge(failing_jobs, results_df) |>
-  merge(open_prs, all.x = TRUE) |>  
+  merge(prs_df, all.x = TRUE) |>  
   subset(select = -`X.`) |> 
   reactable::reactable(columns = list(build = reactable::colDef(html = TRUE),
                                       PR = reactable::colDef(html = TRUE)),
