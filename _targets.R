@@ -53,17 +53,23 @@ list(
   ),
 
   tar_target(
-    failing_jobs,
+    failing_jobs_with_deps,
     subset(failing_jobs_raw,
            subset =!grepl("builds omitted", System),
            select = c("#", "Finished at", "Package/release name", "System")) |>
     transform(packages = gsub("^r-", "", `Package/release name`)) |>
     transform(packages = gsub("-.*$", "", packages)) |>
     transform(build = paste0("https://hydra.nixos.org/build/", X.)) |>
-    transform(fails_because_of = sapply(build, get_failed_dep)) |>
-    transform(build = paste0('<a href="', build, '">', build, '</a>')) |>
+    transform(fails_because_of = sapply(build, get_failed_dep))
+  ),
+
+  tar_target(
+    failing_jobs,
+    transform(failing_jobs_with_deps,
+              build = paste0('<a href="', build, '">', build, '</a>')) |>
     subset(select = -`X.`) #remove the build number column, it's not needed anymorew
   ),
+
 
   tar_target(
     latest_eval_date,
