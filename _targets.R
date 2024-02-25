@@ -60,7 +60,7 @@ list(
     transform(packages = gsub("^r-", "", `Package/release name`)) |>
     transform(packages = gsub("-.*$", "", packages)) |>
     transform(build = paste0("https://hydra.nixos.org/build/", X.)) |>
-    transform(fails_because_of = sapply(build, get_failed_dep))
+    transform(fails_because_of = sapply(build, safe_get_failed_dep))
   ),
 
   tar_target(
