@@ -8,15 +8,10 @@ format: html
 
 targets::tar_load(last_jobset_url)
 
-targets::tar_load(results_table_with_rank)
-targets::tar_load(prs_df)
+targets::tar_load(packages_df_with_rank)
 
 # if everything fails, stop here
-stopifnot("Table has error’d" = !is.null(results_table_with_rank))
-
-results_df <- subset(results_table_with_rank$package.data,
-                     select = c(-date, -total.downloads, -total.packages, -downloads))
-
+stopifnot("Table has error’d" = !is.null(packages_df_with_rank))
 
 ```
 
@@ -33,16 +28,14 @@ doesn't follow the naming convention "rPackages.packagename: blab bal" it likely
 won't show up here.
 
 ```{r, echo = FALSE}
-targets::tar_load(failing_jobs)
+targets::tar_load(final_results)
 
-merge(failing_jobs, results_df) |>
-  merge(prs_df, all.x = TRUE) |>  
-  subset(select = -`X.`) |> 
-  reactable::reactable(columns = list(build = reactable::colDef(html = TRUE),
-                                      PR = reactable::colDef(html = TRUE)),
-                       defaultSorted = "rank",
-                       filterable = TRUE
-   )
+reactable::reactable(final_results,
+  columns = list(build = reactable::colDef(html = TRUE),
+                 PR = reactable::colDef(html = TRUE)),
+  defaultSorted = "rank",
+  filterable = TRUE
+)
 
 ```
 
