@@ -58,3 +58,10 @@ get_failed_dep <- function(url){
   gsub(".*-r-", "", what$What)  |>
     gsub("-.*$", "", x=_)
 }
+
+safe_get_failed_dep <- function(...){
+  tryCatch(
+    get_failed_dep(...),
+    error = function(e) ""
+  )
+}
