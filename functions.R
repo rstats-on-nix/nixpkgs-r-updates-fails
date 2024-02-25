@@ -56,7 +56,8 @@ get_failed_dep <- function(url){
 
   # Clean string
   gsub(".*-r-", "", what$What)  |>
-    gsub("-.*$", "", x=_)
+    gsub("-.*$", "", x=_) |>
+    paste(collapse = "_")
 }
 
 safe_get_failed_dep <- function(...){

@@ -53,23 +53,35 @@ list(
   ),
 
   tar_target(
-    failing_jobs_with_deps,
+    failing_jobs_raw_clean,
     subset(failing_jobs_raw,
            subset =!grepl("builds omitted", System),
            select = c("#", "Finished at", "Package/release name", "System")) |>
     transform(packages = gsub("^r-", "", `Package/release name`)) |>
     transform(packages = gsub("-.*$", "", packages)) |>
-    transform(build = paste0("https://hydra.nixos.org/build/", X.)) |>
-    transform(fails_because_of = sapply(build, safe_get_failed_dep))
+    transform(build = paste0("https://hydra.nixos.org/build/", X.))
+  ),
+
+  tar_target(
+    failing_jobs_with_deps,
+    transform(failing_jobs_raw_clean,
+              fails_because_of = sapply(build, safe_get_failed_dep)) |>
+    transform(fails_because_of =
+                ifelse(
+                  grepl("Build of .nix.store", fails_because_of),
+                  "",
+                  fails_because_of)
+              ) |>
+    transform(fails_because_of =
+                ifelse(fails_because_of == "", packages, fails_because_of)) |>
+    subset(select = -`X.`) #remove the build number column, it's not needed anymorew
   ),
 
   tar_target(
     failing_jobs,
     transform(failing_jobs_with_deps,
-              build = paste0('<a href="', build, '">', build, '</a>')) |>
-    subset(select = -`X.`) #remove the build number column, it's not needed anymorew
+              build = paste0('<a href="', build, '">', build, '</a>'))
   ),
-
 
   tar_target(
     latest_eval_date,
