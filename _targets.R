@@ -6,43 +6,7 @@ tar_option_set(packages = c(
                  "jsonlite"
                ))
 
-safe_packageRank <- function(...){
-  tryCatch(
-    packageRank::packageRank(...),
-    error = function(e) NULL
-  )
-}
-
-get_prs <- function(state){
-
-  output_path <- paste0(state, "_prs.json")
-
-  # Run the command
-  system(paste0(
-    "gh pr list --state=", state,
-    " --search=rPackages -R NixOS/nixpkgs --json title,updatedAt,url > ", 
-    output_path
-  ))
-
-  # Return path for targets
-  output_path
-}
-
-clean_prs <- function(prs_raw, state){
-  prs_raw |>
-    transform(
-      title = gsub("^.*r(p|P)ackages\\.", "", title),
-      state = state
-    ) |>
-    transform(
-      packages = gsub(":.*$", "", title),
-      PR_date = updatedAt,
-      PR = paste0('<a href="', url, '">', url, '</a>')
-    ) |>
-    subset(
-      select = -c(title, url, updatedAt)
-    )
-}
+source("functions.R")
 
 list(
   tar_target(
@@ -59,7 +23,10 @@ list(
   tar_target(
     evaluations,
     {
-      html_table(html_nodes(evaluations_tables, "[class = 'table table-condensed table-striped clickable-rows']"))[[1]] |>
+      html_table(
+        html_nodes(
+          evaluations_tables,
+          "[class = 'table table-condensed table-striped clickable-rows']"))[[1]] |>
         subset(Date != "Date", select = `#`)
     }
   ),
@@ -93,7 +60,9 @@ list(
     transform(packages = gsub("^r-", "", `Package/release name`)) |>
     transform(packages = gsub("-.*$", "", packages)) |>
     transform(build = paste0("https://hydra.nixos.org/build/", X.)) |>
-    transform(build = paste0('<a href="', build, '">', build, '</a>'))
+    transform(fails_because_of = sapply(build, get_failed_dep)) |>
+    transform(build = paste0('<a href="', build, '">', build, '</a>')) |>
+    subset(select = -`X.`) #remove the build number column, it's not needed anymorew
   ),
 
   tar_target(
@@ -107,8 +76,9 @@ list(
   ),
 
   tar_target(
-    results_table_with_rank,
-    safe_packageRank(packages = unique_packages)
+    packages_df_with_rank,
+    safe_packageRank(packages = unique_packages) |>
+    subset(select = c(-date, -total.downloads, -total.packages, -downloads))
   ),
 
   tar_target(
@@ -149,8 +119,20 @@ list(
     prs_df,
     rbind(open_prs, merged_prs) |>
     subset(subset = PR_date > latest_eval_date,
-           select = c("packages", "PR", "PR_date", "state")
+           select = c("fails_because_of", "PR", "PR_date", "state")
            )
+  ),
+
+  tar_target(
+    failing_jobs_with_prs,
+    merge(failing_jobs,
+          prs_df,
+          all.x = TRUE)
+  ),
+
+  tar_target(
+    final_results,
+    merge(failing_jobs_with_prs, packages_df_with_rank)
   ),
 
   tar_render(
