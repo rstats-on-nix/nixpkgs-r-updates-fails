@@ -35,10 +35,6 @@ jobs:
         run: |
           nix-build
 
-      - name: List open PRs
-        run: |
-          gh pr list --search=rPackages -R NixOS/nixpkgs --json title,updatedAt,url > open_prs.json
-
       - name: Compile website
         run: |
           nix-shell default.nix --run "Rscript -e 'targets::tar_make()'"
