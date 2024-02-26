@@ -74,9 +74,7 @@ list(
                   fails_because_of)
               ) |>
     transform(fails_because_of =
-                ifelse(fails_because_of == "", packages, fails_because_of)) |>
-    subset(select = c(packages, fails_because_of, `Finished.at`, System,
-                      build, rank, percentile, PR, PR_date, state))
+                ifelse(fails_because_of == "", packages, fails_because_of))
   ),
 
   tar_target(
@@ -152,7 +150,9 @@ list(
 
   tar_target(
     final_results,
-    merge(failing_jobs_with_prs, packages_df_with_rank)
+    merge(failing_jobs_with_prs, packages_df_with_rank) |>
+    subset(select = c(packages, fails_because_of, `Finished.at`, System,
+                      build, rank, percentile, PR, PR_date, state))
   ),
 
   tar_render(
