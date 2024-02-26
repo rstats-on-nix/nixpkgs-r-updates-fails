@@ -59,7 +59,8 @@ list(
            select = c("#", "Finished at", "Package/release name", "System")) |>
     transform(packages = gsub("^r-", "", `Package/release name`)) |>
     transform(packages = gsub("-.*$", "", packages)) |>
-    transform(build = paste0("https://hydra.nixos.org/build/", X.))
+    transform(build = paste0("https://hydra.nixos.org/build/", X.)) |>
+    head()
   ),
 
   tar_target(
