@@ -3,7 +3,7 @@ title: "nixpkgs:r-updates failures and package rankings"
 format: 
   html_document:
     includes:
-      in_header: '<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">'
+      in_header: header.html
 ---
 
 ```{r, include = FALSE}
