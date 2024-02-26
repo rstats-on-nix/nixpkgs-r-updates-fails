@@ -6,3 +6,5 @@ https://raw.githack.com/b-rodrigues/nixpkgs-r-updates-fails/targets-runs/output/
 The action generating the website runs each day at midnight. Do check the original on Hydra,
 because Bioconductor packages are not listed, nor packages for which somehow {packageRank}
 can't find a ranking.
+
+Contributions more than welcome!
