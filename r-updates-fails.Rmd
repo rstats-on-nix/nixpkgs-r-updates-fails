@@ -6,8 +6,6 @@ format:
       in_header: '<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">'
 ---
 
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-
 ```{r, include = FALSE}
 
 targets::tar_load(last_jobset_url)
