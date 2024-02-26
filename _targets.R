@@ -74,7 +74,6 @@ list(
               ) |>
     transform(fails_because_of =
                 ifelse(fails_because_of == "", packages, fails_because_of)) |>
-    subset(select = -c(`X.`, `Package/release name`)) |>  #remove the build number column, it's not needed anymorew
     subset(select = c(packages, fails_because_of, `Finished.at`, System,
                       build, rank, percentile, PR, PR_date, state))
   ),
