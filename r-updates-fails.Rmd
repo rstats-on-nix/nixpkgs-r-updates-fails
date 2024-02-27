@@ -20,8 +20,9 @@ stopifnot("Table has error’d" = !is.null(packages_df_with_rank))
 The table below can be found at `r last_jobset_url`, but here it includes the
 rank of the package as computed by the `{packageRank}` package, as well as a
 link to the PR to fix the build if it has been opened or if it's been merged
-already. For now, a package that doesn't build because one of its dependencies
-is broken is not linked to its dependency's open PR.
+already. If a package doesn't build because one of its dependencies
+is broken, and if a PR fixing the broken dependency has been opened, then each
+package that depends upon this dependency gets linked to said PR.
 
 The action generating the website runs each day at midnight. Do check the
 original on Hydra, because Bioconductor packages are not listed, nor packages
