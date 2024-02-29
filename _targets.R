@@ -1,9 +1,9 @@
 library(targets)
 library(tarchetypes)
 
-tar_option_set(packages = c(
-                 "rvest",
-                 "jsonlite"
+tar_option_set(packages = c(                
+                 "jsonlite",
+                 "rvest"
                ))
 
 source("functions.R")
