@@ -11,7 +11,7 @@ get_prs <- function(state){
 
   # Run the command
   system(paste0(
-    "gh pr list --state=", state,
+    "gh pr list --limit=100 --state=", state,
     " --search=rPackages -R NixOS/nixpkgs --json title,updatedAt,url > ", 
     output_path
   ))
