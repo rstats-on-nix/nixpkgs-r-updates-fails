@@ -37,19 +37,38 @@ list(
   ),
 
   tar_target(
-    last_jobset_url,
+    last_jobset_still_fail_url,
     paste0("https://hydra.nixos.org/eval/", last_evaluation, "?full=1#tabs-still-fail")
   ),
 
   tar_target(
-    failing_jobs_html,
-    read_html(last_jobset_url)
+    last_jobset_now_fail_url,
+    paste0("https://hydra.nixos.org/eval/", last_evaluation, "?full=1#tabs-now-fail")
+  ),
+  
+  tar_target(
+    still_failing_jobs_html,
+    read_html(last_jobset_still_fail_url)
   ),
 
+    tar_target(
+    now_failing_jobs_html,
+    read_html(last_jobset_now_fail_url)
+  ),
+
+  tar_target(
+    still_failing_jobs_raw,
+    html_table(html_nodes(still_failing_jobs_html, "[id = 'tabs-still-fail']"))[[1]]
+  ),
+
+  tar_target(
+    now_failing_jobs_raw,
+    html_table(html_nodes(now_failing_jobs_html, "[id = 'tabs-now-fail']"))[[1]]
+  ),
 
   tar_target(
     failing_jobs_raw,
-    html_table(html_nodes(failing_jobs_html, "[id = 'tabs-still-fail']"))[[1]]
+    rbind(now_failing_jobs_raw, still_failing_jobs_raw)
   ),
 
   tar_target(
