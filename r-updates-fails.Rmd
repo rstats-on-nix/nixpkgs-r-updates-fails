@@ -17,7 +17,7 @@ stopifnot("Table has error’d" = !is.null(packages_df_with_rank))
 
 ```
 
-The table below can be found at `r last_jobset_url`, but here it includes the
+The table below can be found at `r last_jobset_still_fail_url`, but here it includes the
 rank of the package as computed by the `{packageRank}` package, as well as a
 link to the PR to fix the build if it has been opened or if it's been merged
 already. If a package doesn't build because one of its dependencies
