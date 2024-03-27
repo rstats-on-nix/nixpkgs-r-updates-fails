@@ -8,7 +8,7 @@ format:
 
 ```{r, include = FALSE}
 
-targets::tar_load(last_jobset_url)
+targets::tar_load(last_jobset_still_fail_url)
 
 targets::tar_load(packages_df_with_rank)
 
