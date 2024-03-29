@@ -66,3 +66,21 @@ safe_get_failed_dep <- function(...){
     error = function(e) ""
   )
 }
+
+convert_hours_days <- function(many_dates){
+
+  one_date <- function(a_date){
+    if(grepl("\\d{1}d ago", a_date)){
+      as.character(Sys.Date() - as.numeric(gsub("d ago", "", a_date)))
+    } else if(grepl("\\d{1}h ago", a_date)){
+      as.character(Sys.Date())
+    } else {
+      as.character(a_date)
+    }
+  }
+
+  lapply(many_dates, one_date) |>
+    unlist()
+
+}
+

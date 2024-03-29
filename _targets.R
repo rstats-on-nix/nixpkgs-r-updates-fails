@@ -1,7 +1,7 @@
 library(targets)
 library(tarchetypes)
 
-tar_option_set(packages = c(                
+tar_option_set(packages = c(
                  "jsonlite",
                  "rvest"
                ))
@@ -45,7 +45,7 @@ list(
     last_jobset_now_fail_url,
     paste0("https://hydra.nixos.org/eval/", last_evaluation, "?full=1#tabs-now-fail")
   ),
-  
+
   tar_target(
     still_failing_jobs_html,
     read_html(last_jobset_still_fail_url)
@@ -78,7 +78,8 @@ list(
            select = c("#", "Finished at", "Package/release name", "System")) |>
     transform(packages = gsub("^r-", "", `Package/release name`)) |>
     transform(packages = gsub("-.*$", "", packages)) |>
-    transform(build = paste0("https://hydra.nixos.org/build/", X.))
+    transform(build = paste0("https://hydra.nixos.org/build/", X.)) |>
+    transform(`Finished.at` = convert_hours_days(`Finished.at`))
   ),
 
   tar_target(
@@ -137,8 +138,8 @@ list(
 
   tar_target(
     merged_prs_raw,
-    fromJSON(merged_prs_file) |>
-    subset(subset = grepl("r(p|P)ackages", title))
+    subset(fromJSON(merged_prs_file),
+           subset = grepl("r(p|P)ackages", title))
   ),
 
   tar_target(
