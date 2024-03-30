@@ -56,7 +56,8 @@ targets::tar_load(final_results_bioc)
 
 reactable::reactable(final_results_bioc,
   columns = list(build = reactable::colDef(html = TRUE),
-                 PR = reactable::colDef(html = TRUE)),
+                 PR = reactable::colDef(html = TRUE),
+                 rank = reactable::colDef(defaultSortOrder = "desc")),
   defaultSorted = "rank",
   filterable = TRUE
 )
