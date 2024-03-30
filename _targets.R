@@ -167,11 +167,39 @@ list(
           all.x = TRUE)
   ),
 
+  # Bioconductor rank
+  tar_target(
+    bioc_pkg_scores.tab_path,
+    get_bioc_pkgs_score(),
+    format = "file"
+  ),
+
+  tar_target(
+    bioc_pkg_scores.tab,
+    read.csv(bioc_pkg_scores.tab_path, sep = "\t")
+  ),
+
+  tar_target(
+    bioc_pkg_failing,
+    bioc_pkg_scores.tab |>
+    subset(subset = (Package %in% unique_packages)) |>
+    transform(fails_because_of = Package,
+              rank = Download_score) |>
+    subset(select = c(fails_because_of, rank))
+  ),
+
   tar_target(
     final_results,
     merge(failing_jobs_with_prs, packages_df_with_rank) |>
     subset(select = c(packages, fails_because_of, `Finished.at`, System,
                       build, rank, percentile, PR, PR_date, state))
+  ),
+
+  tar_target(
+    final_results_bioc,
+    merge(failing_jobs_with_prs, bioc_pkg_failing) |>
+    subset(select = c(packages, fails_because_of, `Finished.at`, System,
+                      build, rank, PR, PR_date, state))
   ),
 
   tar_render(

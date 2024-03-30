@@ -9,15 +9,22 @@ get_prs <- function(state){
 
   output_path <- paste0(state, "_prs.json")
 
-  # Run the command
+                                        # Run the command
   system(paste0(
     "gh pr list --limit=100 --state=", state,
     " --search=rPackages -R NixOS/nixpkgs --json title,updatedAt,url > ", 
     output_path
   ))
 
-  # Return path for targets
+                                        # Return path for targets
   output_path
+}
+
+get_bioc_pkgs_score <- function(){
+
+  system("wget https://bioconductor.org/packages/stats/bioc/bioc_pkg_scores.tab")
+
+  "bioc_pkg_scores.tab"
 }
 
 clean_prs <- function(prs_raw, state){

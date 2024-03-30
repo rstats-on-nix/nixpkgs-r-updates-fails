@@ -3,4 +3,5 @@ _targets/
 *.html
 r-updates-fails_files/
 *.json
+*.tab
 result

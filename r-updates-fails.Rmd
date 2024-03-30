@@ -17,23 +17,44 @@ stopifnot("Table has error’d" = !is.null(packages_df_with_rank))
 
 ```
 
-The table below can be found at `r last_jobset_still_fail_url`, but here it includes the
-rank of the package as computed by the `{packageRank}` package, as well as a
-link to the PR to fix the build if it has been opened or if it's been merged
-already. If a package doesn't build because one of its dependencies
-is broken, and if a PR fixing the broken dependency has been opened, then each
-package that depends upon this dependency gets linked to said PR.
+The table below can be found at `r last_jobset_still_fail_url`, but here it
+includes the rank of the package as computed by the `{packageRank}` package, as
+well as a link to the PR to fix the build if it has been opened or if it's been
+merged already. In the case of Bioconductor packages, package rank is directly
+obtained from [this
+csv](https://bioconductor.org/packages/stats/bioc/bioc_pkg_scores.tab) and the
+rank is actually the monthly average of unique IP adresses that download the
+package, so the higher, the better. If a package doesn't build because one of
+its dependencies is broken, and if a PR fixing the broken dependency has been
+opened, then each package that depends upon this dependency gets linked to said
+PR.
 
 The action generating the website runs each day at midnight. Do check the
-original on Hydra, because Bioconductor packages are not listed, nor packages
-for which somehow {packageRank} can't find a ranking. If the pull request
-doesn't follow the naming convention "rPackages.packagename: blab bal" it likely
-won't show up here.
+original on Hydra from time to time though, because I can't guarantee that all
+packages do show here. They should, but who knows. If the pull request fixing
+the package doesn't follow the naming convention "rPackages.packagename: blab
+bal" it likely won't show up here.
+
+This is the table from CRAN packages:
 
 ```{r, echo = FALSE}
 targets::tar_load(final_results)
 
 reactable::reactable(final_results,
+  columns = list(build = reactable::colDef(html = TRUE),
+                 PR = reactable::colDef(html = TRUE)),
+  defaultSorted = "rank",
+  filterable = TRUE
+)
+
+```
+
+This is the table from Bioconductor packages:
+
+```{r, echo = FALSE}
+targets::tar_load(final_results_bioc)
+
+reactable::reactable(final_results_bioc,
   columns = list(build = reactable::colDef(html = TRUE),
                  PR = reactable::colDef(html = TRUE)),
   defaultSorted = "rank",
