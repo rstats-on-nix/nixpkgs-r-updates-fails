@@ -68,6 +68,20 @@ reactable::reactable(final_results_bioc,
 
 ```
 
+This table lists PRs to get an easy overview:
+
+
+```{r, echo = FALSE}
+targets::tar_load(prs_df)
+
+reactable::reactable(prs_df,
+  columns = list(PR = reactable::colDef(html = TRUE)),
+  filterable = TRUE
+)
+
+```
+
+
 Source code: https://github.com/b-rodrigues/nixpkgs-r-updates-fails
 
 Rendered last: `r Sys.time()`
