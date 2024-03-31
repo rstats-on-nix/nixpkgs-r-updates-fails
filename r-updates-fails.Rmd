@@ -49,7 +49,10 @@ reactable::reactable(final_results,
 
 ```
 
-This is the table from Bioconductor packages:
+This is the table from Bioconductor packages. The rank is what they call the
+*download score* which is *the average number of distinct IPs that "hit" the
+package each month for the last 12 months (not counting the current month)*, so
+the higher the rank, the more popular that package is:
 
 ```{r, echo = FALSE}
 targets::tar_load(final_results_bioc)
