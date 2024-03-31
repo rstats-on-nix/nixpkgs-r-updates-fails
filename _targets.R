@@ -176,7 +176,8 @@ list(
 
   tar_target(
     bioc_pkg_scores.tab,
-    read.csv(bioc_pkg_scores.tab_path, sep = "\t")
+    read.csv(bioc_pkg_scores.tab_path, sep = "\t") |>
+    subset(Package != "monocle")
   ),
 
   tar_target(
