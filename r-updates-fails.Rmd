@@ -35,7 +35,8 @@ packages do show here. They should, but who knows. If the pull request fixing
 the package doesn't follow the naming convention "rPackages.packagename: blab
 bal" it likely won't show up here.
 
-This is the table from CRAN packages:
+This is the table for CRAN packages. The lower the rank, the more popular the
+package:
 
 ```{r, echo = FALSE}
 targets::tar_load(final_results)
@@ -49,7 +50,7 @@ reactable::reactable(final_results,
 
 ```
 
-This is the table from Bioconductor packages. The rank is what they call the
+This is the table for Bioconductor packages. The rank is what they call the
 *download score* which is *the average number of distinct IPs that "hit" the
 package each month for the last 12 months (not counting the current month)*, so
 the higher the rank, the more popular that package is:
