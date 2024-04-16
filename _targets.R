@@ -155,7 +155,7 @@ list(
   tar_target(
     prs_df,
     rbind(open_prs, merged_prs) |>
-    subset(subset = state != "merged",
+    subset(#subset = state != "merged",
            select = c("fails_because_of", "PR", "PR_date", "state")
            )
   ),
