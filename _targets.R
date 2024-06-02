@@ -157,7 +157,7 @@ list(
     rbind(open_prs, merged_prs) |>
     subset(#subset = state != "merged",
       select = c("fails_because_of", "PR", "PR_date", "state"),
-      PR_date > as.Date("2024-05-01") # change this date manually to avoid having
+      PR_date > as.Date("2024-05-10") # change this date manually to avoid having
                                       # merged PRs listed from old fixes. This happens
                                       # if packages fail again
            )
