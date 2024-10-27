@@ -195,14 +195,14 @@ list(
   tar_target(
     final_results,
     merge(failing_jobs_with_prs, packages_df_with_rank) |>
-    subset(select = c(packages, fails_because_of, `Finished.at`, System,
+    subset(select = c(packages, fails_because_of, `Finished at`, System,
                       build, rank, percentile, PR, PR_date, state))
   ),
 
   tar_target(
     final_results_bioc,
     merge(failing_jobs_with_prs, bioc_pkg_failing) |>
-    subset(select = c(packages, fails_because_of, `Finished.at`, System,
+    subset(select = c(packages, fails_because_of, `Finished at`, System,
                       build, rank, PR, PR_date, state))
   ),
 
