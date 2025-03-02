@@ -11,7 +11,7 @@ source("functions.R")
 list(
   tar_target(
     evaluations_url,
-    "https://hydra.nixos.org/jobset/nixpkgs/r-updates#tabs-evaluations"
+    "https://hydra.vk3.wtf/jobset/nixpkgs/r-updates#tabs-evaluations"
   ),
 
   tar_force(
@@ -38,12 +38,12 @@ list(
 
   tar_target(
     last_jobset_still_fail_url,
-    paste0("https://hydra.nixos.org/eval/", last_evaluation, "?full=1#tabs-still-fail")
+    paste0("https://hydra.vk3.wtf/eval/", last_evaluation, "?full=1#tabs-still-fail")
   ),
 
   tar_target(
     last_jobset_now_fail_url,
-    paste0("https://hydra.nixos.org/eval/", last_evaluation, "?full=1#tabs-now-fail")
+    paste0("https://hydra.vk3.wtf/eval/", last_evaluation, "?full=1#tabs-now-fail")
   ),
 
   tar_target(
@@ -78,7 +78,7 @@ list(
            select = c("#", "Finished at", "Package/release name", "System")) |>
     transform(packages = gsub("^r-", "", `Package/release name`)) |>
     transform(packages = gsub("-.*$", "", packages)) |>
-    transform(build = paste0("https://hydra.nixos.org/build/", "#")) |>
+    transform(build = paste0("https://hydra.vk3.wtf/build/", "#")) |>
     transform(`Finished at` = convert_hours_days(`Finished at`))
   ),
 
