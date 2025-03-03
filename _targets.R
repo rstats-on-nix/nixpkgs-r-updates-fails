@@ -83,7 +83,8 @@ list(
 
   tar_target(
     failing_jobs_raw,
-    rbind(now_failing_jobs_raw, still_failing_jobs_raw)
+    now_failing_jobs_raw 
+    #rbind(now_failing_jobs_raw, still_failing_jobs_raw)
   ),
 
   tar_target(
