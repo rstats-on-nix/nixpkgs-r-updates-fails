@@ -103,7 +103,9 @@ list(
     failing_jobs_with_deps,
     transform(
       failing_jobs_raw_clean,
-      fails_because_of = sapply(build, safe_get_failed_dep)
+      fails_because_of = ""
+      # is too slow of Justin’s instance
+      #fails_because_of = sapply(build, safe_get_failed_dep)
     ) |>
       transform(
         fails_because_of = ifelse(
