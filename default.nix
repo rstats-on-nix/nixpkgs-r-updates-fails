@@ -1,5 +1,5 @@
 let
- pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/ded3e593909ec35bbdef0335c313afeebe826470.tar.gz") {};
+ pkgs = import (fetchTarball "https://github.com/NixOS/nixpkgs/archive/32f313e49e42f715491e1ea7b306a87c16fe0388.tar.gz") {};
  system_packages = builtins.attrValues {
   inherit (pkgs) gh glibcLocalesUtf8 pandoc nix R   ;
 };
@@ -14,7 +14,8 @@ let
     LC_MEASUREMENT = "en_US.UTF-8";
 
     buildInputs = [
-      system_packages      
+      system_packages
+      pkgs.rPackages.httr2
       pkgs.rPackages.jsonlite
       pkgs.rPackages.knitr
       pkgs.rPackages.packageRank
@@ -23,6 +24,7 @@ let
       pkgs.rPackages.rvest
       pkgs.rPackages.tarchetypes
       pkgs.rPackages.targets
+      pkgs.rPackages.visNetwork
                   ];
 
   }
