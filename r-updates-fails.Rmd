@@ -8,7 +8,11 @@ format:
 
 ```{r, include = FALSE}
 
-targets::tar_load(last_jobset_still_fail_url)
+eval_web_url <- paste(
+    base_url,
+    "eval",
+    targets::tar_read(latest_evaluation), sep = "/"
+) 
 
 targets::tar_load(packages_df_with_rank)
 
@@ -17,17 +21,14 @@ stopifnot("Table has error’d" = !is.null(packages_df_with_rank))
 
 ```
 
-The table below can be found at `r last_jobset_still_fail_url`, but here it
-includes the rank of the package as computed by the `{packageRank}` package, as
-well as a link to the PR to fix the build if it has been opened or if it's been
-merged already. In the case of Bioconductor packages, package rank is directly
-obtained from [this
-csv](https://bioconductor.org/packages/stats/bioc/bioc_pkg_scores.tab) and the
-rank is actually the monthly average of unique IP adresses that download the
-package, so the higher, the better. If a package doesn't build because one of
-its dependencies is broken, and if a PR fixing the broken dependency has been
-opened, then each package that depends upon this dependency gets linked to said
-PR.
+The tables below are a result of the hydra evaluation `r eval_web_url`, 
+(latest build: `r strftime(targets::tar_read(latest_eval_date), usetz = TRUE)`).
+Here, they include the
+percentile of the package as computed by the `{packageRank}` package, as well as
+a link to the PR to fix the build if it has been opened or if it's been merged
+already. In the case of Bioconductor packages, percentile is calculated based on
+the download count from here
+[this csv](https://bioconductor.org/packages/stats/bioc/bioc_pkg_scores.tab).
 
 The action generating the website runs each day at midnight. Do check the
 original on Hydra from time to time though, because I can't guarantee that all
@@ -35,34 +36,33 @@ packages do show here. They should, but who knows. If the pull request fixing
 the package doesn't follow the naming convention "rPackages.packagename: blab
 bal" it likely won't show up here.
 
-This is the table for CRAN packages. The lower the rank, the more popular the
-package:
+This is the table for CRAN packages. The greater the percentile, the more
+popular the package:
 
-```{r, echo = FALSE}
+```{r echo=FALSE, message=FALSE}
 targets::tar_load(final_results)
 
 reactable::reactable(final_results,
-  columns = list(build = reactable::colDef(html = TRUE),
-                 PR = reactable::colDef(html = TRUE)),
-  defaultSorted = "rank",
+  columns = list(log_link = reactable::colDef(html = TRUE),
+                 PR = reactable::colDef(html = TRUE),
+                 percentile = reactable::colDef(defaultSortOrder = "desc")),
+  defaultSorted = "percentile",
   filterable = TRUE
 )
 
 ```
 
-This is the table for Bioconductor packages. The rank is what they call the
-*download score* which is *the average number of distinct IPs that "hit" the
-package each month for the last 12 months (not counting the current month)*, so
-the higher the rank, the more popular that package is:
+This is the table for Bioconductor packages. The greater the percentile, the 
+more popular the package.
 
-```{r, echo = FALSE}
+```{r, echo=FALSE, message=FALSE}
 targets::tar_load(final_results_bioc)
 
 reactable::reactable(final_results_bioc,
-  columns = list(build = reactable::colDef(html = TRUE),
+  columns = list(log_link = reactable::colDef(html = TRUE),
                  PR = reactable::colDef(html = TRUE),
-                 rank = reactable::colDef(defaultSortOrder = "desc")),
-  defaultSorted = "rank",
+                 percentile = reactable::colDef(defaultSortOrder = "desc")),
+  defaultSorted = "percentile",
   filterable = TRUE
 )
 
