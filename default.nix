@@ -24,7 +24,6 @@ let
       pkgs.rPackages.rvest
       pkgs.rPackages.tarchetypes
       pkgs.rPackages.targets
-      pkgs.rPackages.visNetwork
-                  ];
+    ];
 
   }
