@@ -28,6 +28,13 @@ get_bioc_pkgs_score <- function() {
   "bioc_pkg_scores.tab"
 }
 
+get_bioc_errors <- function(tbl, hosts) {
+  tbl |>
+    subset(node %in% hosts) |>
+    with(split(result, pkg)) |>
+    vapply(\(x) if (any(x == "ERROR")) "yes" else "no", "yes")
+}
+
 build_bioc_table <- function(path) {
   orig <- read.csv(path, sep = "\t") |>
     subset(Package != "monocle")
@@ -50,6 +57,20 @@ clean_prs <- function(prs_raw, state) {
     subset(
       select = -c(title, url, updatedAt)
     )
+}
+
+add_bioc_errors <- function(tbl, errs) {
+  tbl$err_on_bioc <- apply(tbl, 1, function(l) {
+    as.character(htmltools::tags$a(
+      href = paste0(
+        "https://bioconductor.org/checkResults/release/bioc-LATEST/",
+        l[["name"]]
+      ),
+      target = "_blank",
+      errs[l[["name"]]]
+    ))
+  })
+  tbl
 }
 
 # Some packages fail because one of their deps (itself an R package)
