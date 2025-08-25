@@ -184,7 +184,7 @@ build_build_table <- function(builds) {
           target = "_blank",
           paste0("build ", x[["id"]])
         )),
-        end_time = x[["stoptime"]]
+        end_time = x[["stoptime"]] %||% NA
       )
     },
     FUN.VALUE = c(
