@@ -149,12 +149,23 @@ get_hydra_evaluations <- function(req, jobset = "r-updates") {
     req_url_path_append(
       paste0("jobset/nixpkgs/", jobset, "/evals")
     ) |>
-    req_headers(Accept = "application/json") |>
+    req_headers(Accept = "application/html") |>
     req_perform()
 
-  evals <- resp_body_json(resp_evals)[["evals"]]
-  stopifnot(length(evals) > 0L)
+  # Extract the fist table from the response
+  # Remove first row (second header row)
+  evals <- rvest::html_table(resp_body_html(resp_evals))[[1]][-1, ]
+  names(evals) <- make.names(names(evals), unique = TRUE)
+  stopifnot(nrow(evals) > 0L)
   evals
+}
+
+# Jobs.2: number of unfinished evaluations (NA if eval is complete)
+# Takes the first column (id) of the complete evaluations, and returns
+# the latest item (the one on top)
+get_latest_evaluation <- function(evals) {
+  res <- subset(evals, is.na(evals[["Jobs.2"]]))[[1]][1]
+  if (is.na(res)) stop("Couldn't find the latest evaluation") else res
 }
 
 get_hydra_builds <- function(eval_id) {

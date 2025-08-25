@@ -28,7 +28,7 @@ list(
 
   tar_target(
     "latest_evaluation",
-    hydra_evaluations[[1]][["id"]]
+    get_latest_evaluation(hydra_evaluations)
   ),
 
   tar_target(
