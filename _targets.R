@@ -12,7 +12,12 @@ tar_option_set(
 base_url <- "https://hydra.vk3.wtf"
 req <- request(base_url)
 platforms <- c("x86_64-linux")
-
+bioc_build_hosts <- c(
+  `x86_64-linux` = "nebbiolo1",
+  `x86_64-darwin` = "merida1",
+  `aarch64-darwin` = "kjohnson1",
+  `aarch64-linux` = "kunpeng2"
+)
 source("functions.R")
 
 list(
@@ -138,7 +143,6 @@ list(
       subset(
         select = c(
           name,
-          nixname,
           system,
           status,
           log_link,
@@ -151,12 +155,11 @@ list(
   ),
 
   tar_target(
-    final_results_bioc,
+    "bioc_pkg_failing_prs",
     merge(failing_jobs_with_prs, bioc_pkg_failing, by = "name") |>
       subset(
         select = c(
           name,
-          nixname,
           system,
           status,
           log_link,
@@ -166,6 +169,21 @@ list(
           state
         )
       )
+  ),
+
+  tar_target(
+    "bioc_build_status_tbl",
+    BiocPkgTools::biocBuildStatusDB()
+  ),
+
+  tar_target(
+    "bioc_build_errors",
+    get_bioc_errors(bioc_build_status_tbl, bioc_build_hosts[platforms])
+  ),
+
+  tar_target(
+    "bioc_pkg_failing_prs_errors",
+    add_bioc_errors(bioc_pkg_failing_prs, bioc_build_errors)
   ),
 
   tar_render(

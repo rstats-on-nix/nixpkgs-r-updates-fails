@@ -15,6 +15,7 @@ let
 
     buildInputs = [
       system_packages
+      pkgs.rPackages.BiocPkgTools
       pkgs.rPackages.httr2
       pkgs.rPackages.jsonlite
       pkgs.rPackages.knitr

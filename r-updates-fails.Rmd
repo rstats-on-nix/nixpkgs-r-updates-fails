@@ -56,11 +56,12 @@ This is the table for Bioconductor packages. The greater the percentile, the
 more popular the package.
 
 ```{r, echo=FALSE, message=FALSE}
-targets::tar_load(final_results_bioc)
 
-reactable::reactable(final_results_bioc,
+reactable::reactable(
+  targets::tar_read(bioc_pkg_failing_prs_errors),
   columns = list(log_link = reactable::colDef(html = TRUE),
                  PR = reactable::colDef(html = TRUE),
+                 err_on_bioc = reactable::colDef(html = TRUE),
                  percentile = reactable::colDef(defaultSortOrder = "desc")),
   defaultSorted = "percentile",
   filterable = TRUE
