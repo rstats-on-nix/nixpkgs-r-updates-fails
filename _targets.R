@@ -101,7 +101,7 @@ list(
       subset(
         #subset = state != "merged",
         select = c("name", "PR", "PR_date", "state"),
-        PR_date > as.Date("2024-05-10") # change this date manually to avoid having
+        PR_date > as.Date("2025-10-01") # change this date manually to avoid having
         # merged PRs listed from old fixes. This happens
         # if packages fail again
       )
