@@ -8,16 +8,9 @@ tar_option_set(
     "rvest"
   )
 )
-
 base_url <- "https://hydra.vk3.wtf"
 req <- request(base_url)
 platforms <- c("x86_64-linux")
-bioc_build_hosts <- c(
-  `x86_64-linux` = "nebbiolo1",
-  `x86_64-darwin` = "merida1",
-  `aarch64-darwin` = "kjohnson1",
-  `aarch64-linux` = "kunpeng2"
-)
 source("functions.R")
 
 list(
@@ -82,7 +75,10 @@ list(
 
   tar_target(
     merged_prs_raw,
-    subset(fromJSON(merged_prs_file), subset = grepl("r(p|P)ackages", title))
+    subset(
+      fromJSON(merged_prs_file),
+      subset = grepl("r(p|P)ackages", title)
+    )
   ),
 
   tar_target(
@@ -174,6 +170,11 @@ list(
   tar_target(
     "bioc_build_status_tbl",
     BiocPkgTools::biocBuildStatusDB()
+  ),
+
+  tar_target(
+    "bioc_build_hosts",
+    get_bioc_hosts()
   ),
 
   tar_target(

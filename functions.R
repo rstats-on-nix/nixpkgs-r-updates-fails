@@ -28,6 +28,35 @@ get_bioc_pkgs_score <- function() {
   "bioc_pkg_scores.tab"
 }
 
+get_bioc_hosts <- function(builders = "active_release_builders") {
+  bioc_builders <- readMDTable::extract_md_tables(
+    "https://raw.githubusercontent.com/Bioconductor/BBS/refs/heads/devel/README.md"
+  ) |>
+    Filter(f = \(x) "Machine" %in% colnames(x)) |>
+    (\(lst) lst[[1]])() |>
+    tidyr::separate_longer_delim(cols = "Machine", delim = ", ") |>
+    dplyr::mutate(
+      Machine = tolower(Machine),
+      OS = ifelse(grepl("MacOS", OS), "darwin", "linux"),
+      Arch = sub("arm64", "aarch64", Arch, fixed = TRUE)
+    ) |>
+    (\(el) {
+      setNames(
+        paste(el$Arch, el$OS, sep = "-"),
+        nm = el$Machine
+      )
+    })()
+
+  bioc_config <- yaml::read_yaml("https://bioconductor.org/config.yaml")
+
+  wrong_way <- bioc_builders[unlist(bioc_config[[builders]])]
+  right_way <- setNames(
+    names(wrong_way),
+    nm = unname(wrong_way)
+  )
+  right_way
+}
+
 get_bioc_errors <- function(tbl, hosts) {
   tbl |>
     subset(node %in% hosts) |>

@@ -19,6 +19,7 @@ let
       pkgs.rPackages.httr2
       pkgs.rPackages.jsonlite
       pkgs.rPackages.knitr
+      pkgs.rPackages.readMDTable
       pkgs.rPackages.packageRank
       pkgs.rPackages.reactable
       pkgs.rPackages.rmarkdown
