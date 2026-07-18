@@ -170,7 +170,7 @@ list(
 
   tar_target(
     "bioc_build_status_tbl",
-    BiocPkgTools::biocBuildStatusDB()
+    BiocPkgTools::biocBuildStatusDB(version = "release")
   ),
 
   tar_target(
