@@ -1,0 +1,88 @@
+---
+title: "nixpkgs:r-updates failures and package rankings"
+format: 
+  html_document:
+    includes:
+      in_header: header.html
+---
+
+```{r, include = FALSE}
+
+eval_web_url <- paste(
+    base_url,
+    "eval",
+    targets::tar_read(latest_evaluation), sep = "/"
+) 
+
+targets::tar_load(packages_df_with_rank)
+
+# if everything fails, stop here
+stopifnot("Table has error’d" = !is.null(packages_df_with_rank))
+
+```
+
+The tables below are a result of the hydra evaluation `r eval_web_url`, 
+(latest build: `r strftime(targets::tar_read(latest_eval_date), usetz = TRUE)`).
+Here, they include the
+percentile of the package as computed by the `{packageRank}` package, as well as
+a link to the PR to fix the build if it has been opened or if it's been merged
+already. In the case of Bioconductor packages, percentile is calculated based on
+the download count from here
+[this csv](https://bioconductor.org/packages/stats/bioc/bioc_pkg_scores.tab).
+
+The action generating the website runs each day at midnight. Do check the
+original on Hydra from time to time though, because I can't guarantee that all
+packages do show here. They should, but who knows. If the pull request fixing
+the package doesn't follow the naming convention "rPackages.packagename: blab
+bal" it likely won't show up here.
+
+This is the table for CRAN packages. The greater the percentile, the more
+popular the package:
+
+```{r echo=FALSE, message=FALSE}
+targets::tar_load(final_results)
+
+reactable::reactable(final_results,
+  columns = list(log_link = reactable::colDef(html = TRUE),
+                 PR = reactable::colDef(html = TRUE),
+                 percentile = reactable::colDef(defaultSortOrder = "desc")),
+  defaultSorted = "percentile",
+  filterable = TRUE
+)
+
+```
+
+This is the table for Bioconductor packages. The greater the percentile, the 
+more popular the package.
+
+```{r, echo=FALSE, message=FALSE}
+
+reactable::reactable(
+  targets::tar_read(bioc_pkg_failing_prs_errors),
+  columns = list(log_link = reactable::colDef(html = TRUE),
+                 PR = reactable::colDef(html = TRUE),
+                 err_on_bioc = reactable::colDef(html = TRUE),
+                 percentile = reactable::colDef(defaultSortOrder = "desc")),
+  defaultSorted = "percentile",
+  filterable = TRUE
+)
+
+```
+
+This table lists PRs to get an easy overview:
+
+
+```{r, echo = FALSE}
+targets::tar_load(prs_df)
+
+reactable::reactable(prs_df,
+  columns = list(PR = reactable::colDef(html = TRUE)),
+  filterable = TRUE
+)
+
+```
+
+
+Source code: https://github.com/b-rodrigues/nixpkgs-r-updates-fails
+
+Rendered last: `r Sys.time()`
