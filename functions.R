@@ -206,7 +206,7 @@ get_hydra_builds <- function(eval_id) {
   resp_body_json(resp_builds)
 }
 
-build_build_table <- function(builds) {
+build_build_table <- function(builds, platforms) {
   as.data.frame(t(vapply(
     builds,
     \(x) {

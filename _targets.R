@@ -10,10 +10,11 @@ tar_option_set(
 )
 base_url <- "https://hydra.vk3.wtf"
 req <- request(base_url)
-platforms <- c("x86_64-linux")
 source("functions.R")
 
 list(
+  tar_target("platforms", "x86_64-linux"),
+
   tar_target(
     "hydra_evaluations",
     get_hydra_evaluations(req = req)
@@ -31,7 +32,7 @@ list(
 
   tar_target(
     "build_table",
-    build_build_table(hydra_builds)
+    build_build_table(hydra_builds, platforms)
   ),
 
   tar_target(
@@ -169,7 +170,7 @@ list(
 
   tar_target(
     "bioc_build_status_tbl",
-    BiocPkgTools::biocBuildStatusDB()
+    BiocPkgTools::biocBuildStatusDB(version = "release")
   ),
 
   tar_target(

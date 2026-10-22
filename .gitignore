@@ -5,3 +5,9 @@ r-updates-fails_files/
 *.json
 *.tab
 result
+.Rproj.user
+*.Rproj
+.Rhistory
+.envrc
+.direnv
+bioc_pkg_scores.tab*
